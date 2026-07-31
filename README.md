@@ -18,7 +18,6 @@ A product opportunity for AI assistant platforms in financial services, taken en
 
 - `index.html` — hub (GitHub Pages entry point)
 - `memo.html` / `prototype.html` / `eval.html` — the three core pieces
-- `eval/` — corpora, answer keys, scoring sheets, full cycle report (re-runnable)
 
 Full research workbook (four-persona handbook, two evidence rounds, opportunity assessment) available on request.
 
