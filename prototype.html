@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Check — interactive demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F0EEE6; --cream2:#E9E6DC; --ink:#2A2825; --muted:#6E6A62; --page:#FFFFFF;
+    --coral:#C96442; --coral-soft:#F5E4DC;
+    --red:#B3372E; --red-hl:#F7DEDB;
+    --teal:#0E7A63; --teal-hl:#DCEEE7;
+    --amber:#A8731B; --amber-hl:#F4E8CF;
+    --blue:#2C5E8F; --blue-hl:#E2ECF5;
+    --line:#D9D4C7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.5}
+  .frame{max-width:1280px;margin:0 auto;padding:22px 18px 50px}
+  .cap{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+  .cap b{color:var(--coral)}
+  .split{display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:start}
+
+  .wordapp{background:#F7F5EF;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .wordbar{background:#FBFAF6;border-bottom:1px solid var(--line);padding:9px 16px;display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)}
+  .wordbar b{color:var(--ink);font-weight:600}
+  .wordbar .tc{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--coral-soft);color:var(--coral);border-radius:4px;padding:3px 8px}
+  .canvas{display:grid;grid-template-columns:1fr 236px;gap:14px;padding:20px 16px 26px;background:#EDEAE1}
+  .docpage{background:var(--page);border:1px solid #DDD9CC;box-shadow:0 2px 10px rgba(60,50,30,.07);padding:34px 38px;font-family:'Source Serif 4',Georgia,serif;font-size:14.5px;line-height:1.62}
+  .docpage .kicker{font-family:'Inter',sans-serif;font-size:10.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .docpage h2{font-size:19px;font-weight:600;margin:6px 0 4px;line-height:1.35}
+  .ratingline{font-family:'Inter',sans-serif;font-size:12.5px;color:var(--muted);border-bottom:1px solid #E4E0D4;padding-bottom:12px;margin-bottom:14px}
+  .docpage p{margin:11px 0;color:#33302B}
+  .docpage .sec{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-top:18px}
+  .ell{color:#A8A296;text-align:center;font-family:'Inter',sans-serif;font-size:11px;margin:8px 0}
+  .fnote{font-size:11.5px;color:var(--muted);border-top:1px solid #E4E0D4;padding-top:10px;margin-top:18px;font-family:'Inter',sans-serif}
+  mark{padding:1px 3px;border-radius:3px;background:transparent}
+  .m-red{background:var(--red-hl);box-shadow:inset 0 -2px 0 var(--red)}
+  .m-teal{background:var(--teal-hl);box-shadow:inset 0 -2px 0 var(--teal)}
+  .m-amber{background:var(--amber-hl);box-shadow:inset 0 -2px 0 var(--amber)}
+  .m-blue{background:var(--blue-hl);box-shadow:inset 0 -2px 0 var(--blue)}
+  .pill{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;color:#fff;vertical-align:super;margin-left:2px;cursor:pointer;border:none}
+  .pill:hover{transform:scale(1.25)}
+  .p-red{background:var(--red)} .p-teal{background:var(--teal)} .p-amber{background:var(--amber)} .p-blue{background:var(--blue)}
+  ins{color:var(--teal);text-decoration:none;border-bottom:1.5px solid var(--teal);font-weight:600;position:relative;cursor:help}
+  ins:hover::after{content:"suggested by Pre-Check — accept / reject";position:absolute;left:0;top:-26px;background:var(--ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 8px;border-radius:4px;white-space:nowrap;z-index:5}
+  del{color:#B08880;text-decoration:line-through}
+  @keyframes flash{0%,100%{background:transparent}30%{background:var(--coral-soft)}}
+  .flash{animation:flash 1.1s ease 2}
+
+  .rail{display:flex;flex-direction:column;gap:10px}
+  .cm{background:#fff;border:1px solid var(--line);border-left:3px solid var(--coral);border-radius:6px;padding:10px 12px;font-size:11.5px;line-height:1.5;cursor:pointer;transition:box-shadow .15s}
+  .cm:hover{box-shadow:0 2px 8px rgba(60,50,30,.12)}
+  .cm .who{display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:10.5px;color:var(--muted);margin-bottom:5px}
+  .cm .who .a{width:14px;height:14px;border-radius:4px;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px}
+  .cm b{font-weight:600}
+  .cm .src{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--teal);margin-top:5px;display:block}
+  .cm.resolved{border-left-color:var(--teal);background:#F2F9F5}
+  .cm.resolved .who::after{content:"✓ FIXED";margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.08em;color:var(--teal);border:1px solid var(--teal);border-radius:3px;padding:1px 5px}
+  .cm .np{float:right}
+
+  .panel{background:#FAF9F5;border:1px solid var(--line);border-radius:10px;overflow:hidden;position:sticky;top:16px}
+  .chead{display:flex;align-items:center;gap:9px;padding:12px 16px;border-bottom:1px solid var(--line)}
+  .star{color:var(--coral);font-size:17px}
+  .chead b{font-size:13.5px}
+  .chead span{font-size:11px;color:var(--muted)}
+  .chat{padding:14px;display:flex;flex-direction:column;gap:12px;font-size:13px}
+  .u{align-self:flex-end;background:var(--cream2);border-radius:12px 12px 3px 12px;padding:9px 13px;max-width:88%}
+  .u .mono{font-family:'IBM Plex Mono',monospace}
+  .c{background:#fff;border:1px solid var(--line);border-radius:12px 12px 12px 3px;padding:12px 14px;line-height:1.55}
+  .statcard{border:1px solid var(--line);border-left:4px solid var(--red);border-radius:6px;padding:9px 12px;margin:9px 0;background:#FDFCFA}
+  .statcard b{font-size:13.5px}
+  .statcard .row{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:4px}
+  .statcard .row i{font-style:normal;font-weight:600}
+  .i-red{color:var(--red)} .i-amber{color:var(--amber)} .i-blue{color:var(--blue)} .i-teal{color:var(--teal)}
+  .c ul{list-style:none;margin:8px 0 2px;font-size:12.5px}
+  .c li{padding:3px 0 3px 20px;position:relative;cursor:pointer;border-radius:4px}
+  .c li:hover{background:var(--cream)}
+  .c li .pill{position:absolute;left:0;top:4px;vertical-align:baseline;margin:0}
+  .qa{border:1px solid var(--amber);background:var(--amber-hl);border-radius:8px;padding:10px 12px;margin-top:9px;font-size:12.5px}
+  .qa .ql{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:var(--amber);margin-bottom:4px}
+  .qa .qb{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+  .qbtn{font-size:11.5px;border:1px solid var(--amber);background:#fff;color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer}
+  .small{font-size:11.5px;color:var(--muted);margin-top:9px;line-height:1.55}
+  .locked{display:flex;align-items:center;gap:8px;margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px}
+  .locked .lk{color:var(--red)}
+
+  /* evidence modal */
+  .scrim{position:fixed;inset:0;background:rgba(35,30,22,.45);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .scrim.open{display:flex}
+  .evbox{background:var(--cream);border-radius:12px;max-width:880px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 18px 60px rgba(30,25,15,.35)}
+  .evhead{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--cream)}
+  .evhead .pill{cursor:default;vertical-align:baseline}
+  .evhead b{font-size:14px}
+  .evhead .x{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:6px;font-size:12px;padding:4px 10px;cursor:pointer}
+  .evgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px 18px 20px}
+  .evgrid.single{grid-template-columns:1fr}
+  .pane{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .pane .ph{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--line);background:#FBFAF6;display:flex;justify-content:space-between}
+  .pane .pb{padding:12px 14px;font-size:12.5px;line-height:1.6}
+  .pdf{font-family:'Source Serif 4',Georgia,serif;font-size:13px}
+  .pdf .hl{background:var(--teal-hl);box-shadow:inset 0 -2px 0 var(--teal);padding:1px 3px;border-radius:3px;font-weight:600}
+  .pdf .hlr{background:var(--red-hl);box-shadow:inset 0 -2px 0 var(--red);padding:1px 3px;border-radius:3px;font-weight:600}
+  .tsl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)}
+  table.xl{border-collapse:collapse;width:100%;font-family:'IBM Plex Mono',monospace;font-size:11px}
+  table.xl th{background:#EFEDE6;color:var(--muted);font-weight:500;border:1px solid var(--line);padding:4px 8px}
+  table.xl td{border:1px solid var(--line);padding:4px 8px;text-align:right;background:#fff}
+  table.xl td.lab{text-align:left;color:var(--muted)}
+  table.xl td.blue{color:#1B4F9C;font-weight:600}
+  td.cellhl{outline:2.5px solid var(--teal);outline-offset:-2px;background:var(--teal-hl)!important;font-weight:600}
+  td.cellbad{outline:2.5px solid var(--red);outline-offset:-2px;background:var(--red-hl)!important;font-weight:600}
+  .evfoot{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);padding:0 18px 16px}
+  .evfoot b{color:var(--teal)}
+  @media(max-width:1000px){.split{grid-template-columns:1fr}.panel{position:static}}
+  @media(max-width:760px){.canvas{grid-template-columns:1fr}.evgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="cap">Pre-Check MVP · interactive — <b>click any numbered flag ①–⑦</b> to open its evidence: source page + model cell · skinned as one assistant platform for concreteness — the pattern is platform-agnostic</div>
+  <div class="split">
+
+    <div class="wordapp">
+      <div class="wordbar"><b>MRDN_2QFY26_EarningsNote_v3.docx</b> · Reviewing <span class="tc">TRACKED CHANGES: PRE-CHECK</span></div>
+      <div style="background:#FBF7EF;border-bottom:1px solid var(--line);padding:7px 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A7B5C;letter-spacing:.04em">OWNERSHIP · BLACK TEXT ON THE WHITE PAGE = THE ANALYST'S DRAFT &nbsp;·&nbsp; <span style="color:var(--coral)">HIGHLIGHTS, REDLINES &amp; COMMENTS = PRE-CHECK'S SUGGESTION LAYER</span> — NOTHING MERGES INTO THE DRAFT UNTIL THE ANALYST ACCEPTS (every mark carries the author "Pre-Check", like any human reviewer)</div>
+      <div class="canvas">
+        <div class="docpage">
+          <div class="kicker">Equity Research · Semiconductors · 29 Jul 2026</div>
+          <h2 id="t5"><mark class="m-amber">MRDN: Blowout Quarter Destroys the Bear Case</mark><button class="pill p-amber" data-f="5">5</button></h2>
+          <div class="ratingline" id="t4">Meridian Semiconductor (MRDN) · <mark class="m-amber">Overweight</mark><button class="pill p-amber" data-f="4">4</button> · PT $195 · Analyst: [name] · Assoc: [name]</div>
+          <p id="t1">MRDN delivered revenue of <del>$4,721M</del> <ins>$4,712M</ins><button class="pill p-red" data-f="1">1</button>, up <del>14.2%</del> <ins>14.0%</ins> year over year, ahead of consensus by 2.1%, on stronger-than-expected data-center mix.</p>
+          <p id="t3"><mark class="m-teal">GAAP gross margin expanded to 58.3%</mark><button class="pill p-teal" data-f="3">3</button>, a company record, driven by mix and the ramp of the N4 node.</p>
+          <div class="ell">· · ·</div>
+          <div class="sec">Adjusted EBITDA</div>
+          <p id="t6">Adjusted EBITDA of $1.9B <mark class="m-blue">excludes a $180M restructuring charge</mark><button class="pill p-blue" data-f="6">6</button> related to the Penang consolidation, which we treat as one-time.</p>
+          <div class="ell">· · ·</div>
+          <div class="sec">Estimates &amp; valuation</div>
+          <p id="t2">We raise our FY26E EPS to <mark class="m-red">$8.45</mark><button class="pill p-red" data-f="2">2</button> on stronger data-center mix. At current levels the stock trades at 21.3× our estimate…</p>
+          <div class="fnote" id="t7">Required disclosures · Ratings distribution as of <mark class="m-amber">31 Mar 2026</mark><button class="pill p-amber" data-f="7">7</button> · Analyst certification…</div>
+        </div>
+
+        <div class="rail">
+          <div class="cm resolved" data-f="1"><span class="np pill p-red">1</span><div class="who"><span class="a">✳</span>Pre-Check</div><b>Fixed as tracked change.</b> Note said $4,721M; press release, 10-Q and transcript all say $4,712M. Growth rate updated 14.2 → 14.0%.<span class="src">▸ CLICK TO VIEW SOURCE + MODEL</span></div>
+          <div class="cm" data-f="2"><span class="np pill p-red">2</span><div class="who"><span class="a">✳</span>Pre-Check</div><b>Stale vs. your model.</b> EPS!D14 changed to <b>$8.51</b> at 11:42 PM — after this paragraph. 3 more places quote $8.45.<span class="src">▸ CLICK TO VIEW MODEL CELL + BLAST RADIUS</span></div>
+          <div class="cm" data-f="3"><span class="np pill p-teal">3</span><div class="who"><span class="a">✳</span>Pre-Check</div><b>Right value, wrong basis.</b> 58.3% is the <b>non-GAAP</b> gross margin. GAAP is 54.1%.<span class="src">▸ CLICK TO VIEW 10-Q P.14</span></div>
+          <div class="cm" data-f="4"><span class="np pill p-amber">4</span><div class="who"><span class="a">✳</span>Pre-Check</div><b>Off the house scale.</b> House ratings are Buy / Neutral / Sell; MRDN is Buy.<span class="src">▸ CLICK TO VIEW COMPLIANCE MANUAL §2.4</span></div>
+          <div class="cm" data-f="5"><span class="np pill p-amber">5</span><div class="who"><span class="a">✳</span>Pre-Check</div><b>Title will likely bounce.</b> Matches promotional-framing pattern in prior SA rejections.<span class="src">▸ CLICK TO VIEW REJECTION LOG</span></div>
+          <div class="cm" data-f="7"><span class="np pill p-amber">7</span><div class="who"><span class="a">✳</span>Pre-Check</div><b>Disclosure stale.</b> Ratings-distribution table is one quarter old.<span class="src">▸ CLICK TO VIEW CURRENT TABLE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="chead"><span class="star">✳</span><div><b>Assistant</b><br><span>same chat that drafted the note at 10 PM · earnings skill</span></div></div>
+      <div class="chat">
+        <div class="u"><span class="mono">/pre-check</span> before I send this to the SA queue</div>
+        <div class="c">
+          Checked the note against the model (v18), the call transcript, and the 10-Q. <b>31 seconds, 52 figures.</b>
+          <div class="statcard"><b>Not ready to submit</b>
+            <div class="row"><i class="i-red">2 blocking</i> · <i class="i-amber">3 review</i> · <i class="i-blue">1 judgment</i> · <i class="i-teal">47/52 figures verified — value &amp; basis</i></div>
+          </div>
+          I've left <b>7 comments in your draft</b>. Click any of them to see the evidence:
+          <ul>
+            <li data-f="1"><span class="pill p-red">1</span>Revenue $4,721M → $4,712M — <i>fixed, accept in doc</i></li>
+            <li data-f="2"><span class="pill p-red">2</span>FY26E EPS stale vs. model — blast radius: 4 locations</li>
+            <li data-f="3"><span class="pill p-teal">3</span>58.3% is non-GAAP; sentence says GAAP</li>
+            <li data-f="4"><span class="pill p-amber">4</span>"Overweight" isn't on the house scale</li>
+            <li data-f="5"><span class="pill p-amber">5</span>Title matches prior SA-rejection pattern</li>
+            <li data-f="7"><span class="pill p-amber">7</span>Ratings-distribution table one quarter stale</li>
+          </ul>
+          <div class="qa"><div class="ql">RUNG 3 · YOUR CALL — I DON'T DECIDE THIS</div>
+            The $180M Penang restructuring charge is added back to adjusted EBITDA. In your 4Q FY25 note, a similar charge was treated as <b>recurring</b>. Which treatment here? <span class="pill p-blue" data-f="6" style="vertical-align:baseline">6</span>
+            <div class="qb"><button class="qbtn">One-time — keep add-back</button><button class="qbtn">Recurring — recompute</button></div>
+            <div class="small">Either way I'll log the decision with your name and timestamp.</div>
+          </div>
+          <div class="small">After you edit, say <b>"recheck"</b> and I'll re-verify only what changed.</div>
+          <div class="locked"><span class="lk">●</span> SA SUBMISSION — LOCKED UNTIL 2 BLOCKING FLAGS CLEAR · PRE-CHECK IS NOT A COMPLIANCE DETERMINATION; THE SA REMAINS THE REVIEWER OF RECORD</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- evidence modal -->
+<div class="scrim" id="scrim">
+  <div class="evbox">
+    <div class="evhead"><span class="pill" id="evpill">1</span><b id="evtitle"></b><button class="x" id="evx">Close ✕</button></div>
+    <div class="evgrid" id="evgrid"></div>
+    <div class="evfoot" id="evfoot"></div>
+  </div>
+</div>
+
+<script>
+const EV = {
+ 1:{color:'p-red',title:'Revenue — three sources agree; the note didn\u2019t',
+   panes:[
+    {h:'SOURCE · PRESS RELEASE P.2 &nbsp;+&nbsp; TRANSCRIPT 00:03:12',b:`<div class="pdf">&ldquo;Second-quarter revenue was <span class="hl">$4,712 million</span>, an increase of <span class="hl">14.0 percent</span> from the prior-year period, driven by Data Center&hellip;&rdquo;<br><br><span class="tsl">TRANSCRIPT 00:03:12 · CFO:</span> &ldquo;&hellip;revenue of <span class="hl">four billion seven hundred twelve million</span>&hellip;&rdquo;</div>`},
+    {h:'MODEL · REV!C8 (v18) — MODEL IS CORRECT',b:`<table class="xl"><tr><th></th><th>B</th><th>C</th><th>D</th></tr><tr><td class="lab">7&nbsp;&nbsp;Revenue ($M)</td><td>1QFY26A</td><td>2QFY26A</td><td>3QFY26E</td></tr><tr><td class="lab">8</td><td>4,388</td><td class="cellhl">4,712</td><td class="blue">4,930</td></tr></table><div style="margin-top:8px;font-size:11px;color:#6E6A62">Model already ties to source. Only the note text diverged — classic 1 a.m. transposition.</div>`}
+   ],
+   foot:'RUNG 1 · TRANSCRIPTION — <b>auto-fixed as tracked change</b>; growth rate recomputed 14.2 → 14.0%'},
+ 2:{color:'p-red',title:'FY26E EPS — the model moved after the sentence was written',
+   panes:[
+    {h:'MODEL · EPS!D14 (v18) — EDITED 11:42 PM',b:`<table class="xl"><tr><th></th><th>C</th><th>D</th></tr><tr><td class="lab">13&nbsp;&nbsp;EPS</td><td>FY25A</td><td>FY26E</td></tr><tr><td class="lab">14</td><td>7.02</td><td class="cellhl">8.51</td></tr></table><div style="margin-top:8px;font-size:11px;color:#6E6A62">Cell history: 8.45 → <b>8.51</b> at 11:42 PM (DC segment GM assumption 61.5% → 62.0%). Paragraph last edited 10:17 PM.</div>`},
+    {h:'BLAST RADIUS · 4 NOTE LOCATIONS QUOTE $8.45',b:`<div style="font-size:12px;line-height:1.8">p.1 &nbsp;summary box — &ldquo;FY26E EPS <span class="pdf"><span class="hlr">$8.45</span></span>&rdquo;<br>p.6 &nbsp;¶1 — &ldquo;we raise our FY26E EPS to <span class="pdf"><span class="hlr">$8.45</span></span>&rdquo;<br>p.9 &nbsp;valuation table — P/E computed on <span class="pdf"><span class="hlr">8.45</span></span><br>p.10 ¶2 — &ldquo;implies 21.3× our <span class="pdf"><span class="hlr">$8.45</span></span> estimate&rdquo;</div>`}
+   ],
+   foot:'NOTE ↔ MODEL — <b>propagate $8.51 to all 4 locations</b>, or revert D14; diff mode re-checks only these after your edit'},
+ 3:{color:'p-teal',title:'Gross margin — right value, wrong basis (the definition check)',
+   panes:[
+    {h:'SOURCE · 10-Q P.14 — MARGIN RECONCILIATION',b:`<table class="xl"><tr><th style="text-align:left">Gross margin</th><th>2QFY26</th></tr><tr><td class="lab">GAAP</td><td class="cellhl">54.1%</td></tr><tr><td class="lab">SBC</td><td>+2.9</td></tr><tr><td class="lab">Amort. of acquired intangibles</td><td>+1.3</td></tr><tr><td class="lab">Non-GAAP</td><td class="cellhl">58.3%</td></tr></table>`},
+    {h:'IN YOUR NOTE · P.2 ¶3',b:`<div class="pdf">&ldquo;<span class="hlr">GAAP</span> gross margin expanded to <span class="hl">58.3%</span>, a company record&hellip;&rdquo;<br><br><span style="font-family:Inter;font-size:11.5px;color:#6E6A62">The value matches the <b>non-GAAP</b> row. A number-match alone would pass this — it takes reading the reconciliation to catch it.</span></div>`}
+   ],
+   foot:'RUNG 2 · DEFINITION — <b>the wedge</b>: fix the label (non-GAAP) or the figure (54.1%); either is defensible, the mismatch is not'},
+ 4:{color:'p-amber',title:'&ldquo;Overweight&rdquo; is not on the house rating scale',
+   panes:[
+    {h:'SOURCE · COMPLIANCE MANUAL §2.4 — RATING DEFINITIONS',b:`<div class="pdf">&ldquo;All research must employ the firm&rsquo;s three-tier scale: <span class="hl">Buy</span>, <span class="hl">Neutral</span>, <span class="hl">Sell</span>. No other rating terminology may appear in published research.&rdquo;</div>`},
+    {h:'RATING HISTORY · MRDN',b:`<div style="font-size:12px;line-height:1.8">14 Apr 2026 — <b>Buy</b> initiated, PT $175<br>29 Jul 2026 — this note: PT raised to $195, rating unchanged<br><br><span style="color:#6E6A62;font-size:11.5px">&ldquo;Overweight&rdquo; appears on p.1 and p.8 — rating-definition consistency is an explicit SA check.</span></div>`}
+   ],
+   foot:'RATING LANGUAGE — replace both instances with <b>Buy</b>'},
+ 5:{color:'p-amber',title:'Title matches the pattern SA has bounced before',
+   panes:[
+    {h:'HOUSE STYLE §3.2 + SA REJECTION LOG',b:`<div class="pdf">&ldquo;Headlines must be descriptive, not promotional or conclusory.&rdquo;<br><br><span class="tsl">PRIOR BOUNCES (RULES LOG):</span><div style="font-family:Inter;font-size:11.5px;line-height:1.7;margin-top:4px">Nov 2025 — &ldquo;&hellip;Crushes Estimates&rdquo; → rejected, retitled<br>Mar 2026 — &ldquo;The Shorts Are Wrong&rdquo; → rejected, retitled</div>`},
+    {h:'SUGGESTED NEUTRAL ALTERNATIVES',b:`<div style="font-size:12.5px;line-height:1.8">&ldquo;MRDN 2Q: Beat and Raise on Data-Center Mix&rdquo;<br>&ldquo;MRDN: Above on Margins; FY26 Outlook Raised&rdquo;</div>`}
+   ],
+   foot:'WORDING — pick an alternative, or keep &amp; pre-brief the SA; the pattern match is from <b>this desk&rsquo;s own rejection history</b>'},
+ 6:{color:'p-blue',title:'Restructuring add-back — surfaced for your judgment, not decided',
+   panes:[
+    {h:'SOURCE · 10-Q NOTE 9 — RESTRUCTURING',b:`<div class="pdf">&ldquo;&hellip;recorded <span class="hl">$180 million</span> of charges related to the consolidation of Penang operations, consisting of severance and facility exit costs&hellip;&rdquo;</div>`},
+    {h:'YOUR PRECEDENT · 4QFY25 NOTE + MODEL EBITDA!F22',b:`<div style="font-size:12px;line-height:1.7">4QFY25 note, p.3: similar consolidation charge <b>treated as recurring</b> (not added back).<br><br><table class="xl"><tr><th></th><th>F</th></tr><tr><td class="lab">21&nbsp;&nbsp;EBITDA</td><td>1,720</td></tr><tr><td class="lab">22&nbsp;&nbsp;+ Restructuring add-back</td><td class="cellhl">180</td></tr><tr><td class="lab">23&nbsp;&nbsp;Adj. EBITDA</td><td>1,900</td></tr></table></div>`}
+   ],
+   foot:'RUNG 3 · TREATMENT — <b>your call, logged with name + timestamp</b>; pre-check only shows you the inconsistency with your own precedent'},
+ 7:{color:'p-amber',title:'Ratings-distribution table is one quarter stale',
+   panes:[
+    {h:'IN YOUR NOTE · P.11 DISCLOSURES',b:`<div class="pdf">&ldquo;Ratings distribution as of <span class="hlr">31 Mar 2026</span>: Buy 52% · Neutral 41% · Sell 7%&rdquo;</div>`},
+    {h:'DISCLOSURE LIBRARY · CURRENT (30 JUN 2026)',b:`<div class="pdf">&ldquo;Ratings distribution as of <span class="hl">30 Jun 2026</span>: Buy 54% · Neutral 39% · Sell 7%&rdquo;<br><br><span style="font-family:Inter;font-size:11.5px;color:#6E6A62">One click inserts the current table; all other required disclosures verified present.</span></div>`}
+   ],
+   foot:'DISCLOSURES — insert current table from library'}
+};
+const scrim=document.getElementById('scrim');
+function openEv(f){
+  const e=EV[f]; if(!e) return;
+  const t=document.getElementById('t'+f);
+  if(t){t.classList.remove('flash');void t.offsetWidth;t.classList.add('flash');}
+  document.getElementById('evpill').textContent=f;
+  document.getElementById('evpill').className='pill '+e.color;
+  document.getElementById('evtitle').innerHTML=e.title;
+  const g=document.getElementById('evgrid');
+  g.className='evgrid'+(e.panes.length===1?' single':'');
+  g.innerHTML=e.panes.map(p=>`<div class="pane"><div class="ph">${p.h}</div><div class="pb">${p.b}</div></div>`).join('');
+  document.getElementById('evfoot').innerHTML=e.foot;
+  scrim.classList.add('open');
+}
+document.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();openEv(el.dataset.f);}));
+document.getElementById('evx').addEventListener('click',()=>scrim.classList.remove('open'));
+scrim.addEventListener('click',e=>{if(e.target===scrim)scrim.classList.remove('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')scrim.classList.remove('open');});
+</script>
+</body>
+</html>

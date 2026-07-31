@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eval Report — Pre-Check Checker, v1→v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F6F8F7;--ink:#10202E;--muted:#5D6B76;--amber:#B97C16;--amber-soft:#FEF5E7;
+        --red:#B3372E;--teal:#0E7A63;--teal-soft:#DDEEE8;--line:#C9D2D4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:14.5px;line-height:1.55}
+  .page{max-width:860px;margin:0 auto;padding:52px 38px 60px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  h1{font-family:'Newsreader',serif;font-weight:600;font-size:36px;line-height:1.1;margin:10px 0 8px}
+  .sub{font-size:15px;color:var(--muted);max-width:640px}
+  .hero{display:flex;gap:26px;margin:26px 0 6px;flex-wrap:wrap}
+  .hn .n{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600}
+  .hn .l{font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+  .n.teal{color:var(--teal)} .n.amber{color:var(--amber)}
+  section{margin-top:34px}
+  h2{font-family:'Newsreader',serif;font-weight:600;font-size:20px;border-bottom:1.5px solid var(--ink);padding-bottom:7px;margin-bottom:14px;display:flex;align-items:baseline;gap:10px}
+  h2 .tag{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.1em;font-weight:400}
+  p{max-width:760px}
+  p+p{margin-top:9px}
+  b{font-weight:600}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:10px}
+  th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;text-align:left;border-bottom:1.5px solid var(--ink);padding:6px 10px 6px 0}
+  td{border-bottom:1px solid var(--line);padding:7px 10px 7px 0;vertical-align:top}
+  td.mono{font-family:'IBM Plex Mono',monospace;font-size:12px}
+  .good{color:var(--teal);font-weight:600}
+  .bad{color:var(--red);font-weight:600}
+  .find{border-left:3px solid var(--teal);padding:2px 0 2px 16px;margin-top:14px;max-width:760px}
+  .find .fh{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--teal);margin-bottom:3px}
+  .find.a{border-color:var(--amber)} .find.a .fh{color:var(--amber)}
+  .lim{background:#fff;border:1px solid var(--line);border-radius:6px;padding:14px 18px;margin-top:8px;font-size:13px}
+  .lim ul{list-style:none}
+  .lim li{padding:3px 0 3px 18px;position:relative}
+  .lim li::before{content:"—";position:absolute;left:0;color:var(--muted)}
+  .foot{margin-top:40px;border-top:1.5px solid var(--ink);padding-top:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7}
+  .foot a{color:var(--teal);text-decoration:none}
+  @media(max-width:640px){.page{padding:34px 18px 46px}h1{font-size:28px}}
+  @media print{body{background:#fff}.page{padding:18px 6px}section{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Capability eval · blind-injected errors · July 2026</div>
+    <h1>Can a model do the SA's content checks?</h1>
+    <p class="sub">Evaluating a prompt-level pre-check checker (a frontier LLM under a structured checking prompt) against planted errors in realistic sell-side earnings notes — before writing any product code.</p>
+    <div class="hero">
+      <div class="hn"><div class="n teal">20/20</div><div class="l">Recall · both corpora · all v2 runs</div></div>
+      <div class="hn"><div class="n">87–100%</div><div class="l">Strict precision by run · lenient ~100%</div></div>
+      <div class="hn"><div class="n teal">120/120</div><div class="l">Prior true positives preserved after fix</div></div>
+      <div class="hn"><div class="n amber">0/3 → 3/3</div><div class="l">Policy check repaired by ~150 words of rules</div></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Method <span class="tag">DESIGNED FOR CONTAMINATION-FREE MEASUREMENT</span></h2>
+    <p><b>System under test:</b> a frontier model acting as a pre-submission checker under a structured prompt (five check categories; two-layer number verification — transcription <i>and</i> definition/basis; flags with location, source citation, confidence). No application code — the prompt <i>is</i> the v0.1 implementation, and it is the riskiest assumption worth testing first.</p>
+    <p><b>Corpora:</b> Two realistic ~2-page earnings notes built from real filings (NVDA Q1 FY27; AMD Q1 FY26 as a holdout), each with <b>20 blind-injected errors</b> across transcription, definition/basis, note↔model, rating language, prohibited wording, and disclosures — with a difficulty gradient including 6 deliberately deep-buried errors — plus <b>33–35 verified-correct anchors</b> per corpus to measure false positives.</p>
+    <p><b>Protocol:</b> Corpus construction (with answer key) and checker runs live in <b>separate sessions</b> so the checker never sees its own exam being written. Scoring: strict (any unsupported flag counts against precision) and lenient (corpus-flaw and low-confidence flags excluded). Runs: v1 ×5, v2 ×6, scored by hand against the answer key.</p>
+  </section>
+
+  <section>
+    <h2>Results <span class="tag">V1 BASELINE → V2 AFTER TWO PROMPT PATCHES</span></h2>
+    <table>
+      <tr><th>Metric</th><th>v1 (5 runs)</th><th>v2 (6 runs)</th></tr>
+      <tr><td>Recall</td><td class="mono">NVDA 20/20 · AMD <span class="bad">19/20</span> — one stable miss (H17)</td><td class="mono"><span class="good">20/20 on every run, both corpora</span></td></tr>
+      <tr><td>Strict precision</td><td class="mono">comparable range</td><td class="mono">NVDA 83–91% · AMD 95–100% (two perfect runs)</td></tr>
+      <tr><td>Lenient precision</td><td class="mono">~100%</td><td class="mono">~100%</td></tr>
+      <tr><td>Deep-buried errors (hardest 6)</td><td class="mono">6/6 stable</td><td class="mono">6/6 stable</td></tr>
+      <tr><td>Triage stability</td><td class="mono"><span class="bad">Drift</span> — two flags oscillated between formal flag and side note across runs</td><td class="mono"><span class="good">Stable</span> — 3/3 on all previously drifting items</td></tr>
+      <tr><td>Regression after patches</td><td class="mono">—</td><td class="mono"><span class="good">120/120 prior TPs preserved; zero lost</span></td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:12.5px;color:var(--muted)">Strict-precision gap between corpora is explained, not random: the NVDA corpus contains four unsourced color statements (two of them corpus flaws), which v2's triage rule systematically promotes to formal flags — see Finding 3.</p>
+  </section>
+
+  <section>
+    <h2>Findings <span class="tag">EACH ONE IS A DESIGN INPUT, NOT JUST A SCORE</span></h2>
+    <div class="find">
+      <div class="fh">1 · EVIDENCE-DRIVEN CHECKING IS SATURATED OUT OF THE BOX</div>
+      Transcription, definition/basis, cross-document ties, totals, footnotes, segment splits: 20/20 with near-zero prompt engineering and zero variance across runs. <b>The moat is therefore not "can the model catch it"</b> — any frontier model can. It is workflow integration, triage presentation, and the policy rule library. The eval independently re-derived the product's strategic shape.
+    </div>
+    <div class="find a">
+      <div class="fh">2 · POLICY KNOWLEDGE MUST BE ENCODED, NOT ASSUMED</div>
+      The one stable v1 miss (H17: a rating term off the house whitelist) was a policy-knowledge failure, not a reasoning failure — 0/3 across runs. Adding ~150 words of explicit house rules fixed it to 3/3 <b>with zero regression</b> (120/120). Implication: the rule library is a first-class product asset, and per-desk rules (learned from each desk's own bounce history) are the compounding part.
+    </div>
+    <div class="find">
+      <div class="fh">3 · A SIDE EFFECT BECAME THE SIXTH CHECK</div>
+      The v2 triage rule systematically promoted <i>unsupported factual assertions</i> (consensus claims, product attributions with no source) to formal flags — technically "false positives" against the answer key, but arguably correct pre-submission behavior. Adopted as a sixth check category; next corpus will plant unverifiable-claim errors deliberately.
+    </div>
+  </section>
+
+  <section>
+    <h2>Limitations <span class="tag">WHAT THIS EVAL DOES NOT SHOW</span></h2>
+    <div class="lim"><ul>
+      <li><b>Synthetic ground truth.</b> Planted errors, not real SA bounces. The real distribution of content-vs-taste rejections lives in publishing systems — obtaining it is the point of the proposed shadow-mode phase, not something this eval can substitute for.</li>
+      <li><b>Retrieval untested.</b> Correct source pages were hand-fed. Finding the reconciliation table inside a 200-page 10-Q is a separate, unevaluated problem.</li>
+      <li><b>Corpora now saturated.</b> Both sets stopped discriminating at v2 and are demoted to regression suites; the next capability step needs a third corpus (new issuer, unverifiable-claim subtypes, multi-quarter trend claims, table-vs-prose contradictions).</li>
+      <li><b>Rationale hallucinations.</b> Verdicts were reliable, but supporting explanations occasionally contained small errors that flipped between runs — motivating a UI that visually separates <i>verdict</i> from <i>reasoning</i>, with the SA reviewing the latter.</li>
+      <li><b>Latency and cost at scale untested</b> (excerpted corpora, not full filings). Hand-scoring is the current bottleneck; scoring rules are now stable enough to convert to an LLM-as-judge with human review of boundary cases (~70% cost reduction next cycle).</li>
+    </ul></div>
+  </section>
+
+  <div class="foot">
+    STATUS · cycle closed — Prompt B v2 is the production candidate · corpora, answer keys and scoring sheets are in <a href="./eval/">/eval</a> and can be re-run · part of the <a href="./index.html">Approval Bottleneck</a> work sample · FANZHE ZHU · July 2026
+  </div>
+
+</div>
+</body>
+</html>

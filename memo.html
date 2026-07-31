@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Approval Bottleneck — Work Sample</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F8F7; --ink:#10202E; --muted:#5D6B76;
+    --amber:#B97C16; --amber-soft:#F4E7CE;
+    --red:#B3372E; --red-soft:#F6E2DF;
+    --teal:#0E7A63; --teal-soft:#DDEEE8;
+    --line:#C9D2D4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:15px;line-height:1.55}
+  .page{max-width:900px;margin:0 auto;padding:56px 40px 64px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  h1{font-family:'Newsreader',serif;font-weight:600;font-size:46px;line-height:1.05;letter-spacing:-.01em;margin:10px 0 8px}
+  .sub{font-size:16px;color:var(--muted);max-width:640px}
+  .byline{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:14px}
+  .thesis{font-family:'Newsreader',serif;font-size:22px;line-height:1.4;font-weight:500;border-left:3px solid var(--ink);padding:2px 0 2px 20px;margin:36px 0 8px;max-width:760px}
+  .thesis b{color:var(--red);font-weight:600}
+  section{margin-top:44px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1.5px solid var(--ink);padding-bottom:8px;margin-bottom:18px}
+  .sec-head h2{font-family:'Newsreader',serif;font-weight:600;font-size:22px}
+  .sec-head .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.1em}
+  .lede{font-size:14.5px;max-width:760px;margin-bottom:16px}
+  .lede b{font-weight:600}
+  .caption{font-size:13px;color:var(--muted);max-width:720px;margin-top:10px}
+  .caption b{color:var(--ink)}
+  sup.r{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--teal);font-weight:600}
+  svg{width:100%;height:auto;display:block}
+  .diagram{background:#FCFDFC;border:1px solid var(--line);border-radius:6px;padding:14px 10px 8px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .callout{background:var(--amber-soft);border:1px solid #DDC28A;border-radius:6px;padding:16px 18px;font-size:13.5px;line-height:1.5}
+  .callout .co-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--amber);margin-bottom:8px}
+  .callout p+p{margin-top:8px}
+  /* evidence rows */
+  .ev{border-top:1px solid var(--line)}
+  .ev-row{display:grid;grid-template-columns:170px 1fr 250px;gap:18px;padding:14px 0;border-bottom:1px solid var(--line);align-items:start}
+  .ev-src{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.06em;line-height:1.6;text-transform:uppercase}
+  .ev-q{font-family:'Newsreader',serif;font-style:italic;font-size:15.5px;line-height:1.45}
+  .ev-c{font-size:12.5px;line-height:1.5;border-left:2px solid var(--teal);padding-left:12px}
+  .ev-c .cc{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--teal);display:block;margin-bottom:3px}
+  .protocol{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 16px;font-size:12.5px;color:var(--muted);line-height:1.55}
+  .protocol b{color:var(--ink)}
+  .meta-line{font-family:'Newsreader',serif;font-size:18px;font-style:italic;margin-top:18px;color:var(--ink)}
+  .takeaway{font-size:13.5px;margin-top:12px;max-width:720px}
+  .takeaway b{color:var(--teal)}
+  .mvp{display:flex;align-items:stretch;gap:0;margin-top:6px;flex-wrap:wrap}
+  .mvp .box{border:1.5px solid var(--ink);border-radius:6px;padding:12px 14px;font-size:13px;background:#fff}
+  .mvp .arrow{align-self:center;padding:0 10px;font-family:'IBM Plex Mono',monospace;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{font-family:'IBM Plex Mono',monospace;font-size:11px;border:1px solid var(--line);border-radius:99px;padding:4px 10px;background:#fff;color:var(--ink)}
+  .chip.hot{border-color:var(--teal);background:var(--teal-soft);color:var(--teal);font-weight:500}
+  .kv{font-family:'IBM Plex Mono',monospace;font-size:12px;margin-top:14px;line-height:1.7}
+  .kv b{color:var(--teal)}
+  .kill{margin-top:16px;border:1.5px dashed var(--red);border-radius:6px;padding:12px 16px;background:var(--red-soft)}
+  .kill .co-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--red);margin-bottom:6px}
+  .kill ul{list-style:none;font-size:13px}
+  .kill li{padding:3px 0 3px 18px;position:relative}
+  .kill li::before{content:"✕";position:absolute;left:0;color:var(--red);font-weight:600}
+  .src{columns:2;column-gap:28px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.65;color:var(--muted)}
+  .src div{break-inside:avoid;margin-bottom:7px}
+  .src b{color:var(--ink);font-weight:500}
+  .src a{color:var(--teal);text-decoration:none;word-break:break-all}
+  .src-note{font-size:12px;color:var(--muted);margin-top:14px;border-top:1px solid var(--line);padding-top:10px;max-width:760px}
+  footer{margin-top:52px;border-top:1.5px solid var(--ink);padding-top:14px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  footer .f{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);line-height:1.7}
+  @media (max-width:720px){
+    .page{padding:36px 18px 48px}
+    h1{font-size:34px}
+    .cols{grid-template-columns:1fr}
+    .ev-row{grid-template-columns:1fr;gap:8px}
+    .thesis{font-size:19px}
+    .src{columns:1}
+  }
+  @media print{
+    body{background:#fff}
+    .page{padding:20px 8px}
+    section{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="eyebrow">Work sample · Independent desk research · July 2026</div>
+    <h1>The Approval Bottleneck</h1>
+    <p class="sub">A product wedge for AI assistant platforms in financial services.</p>
+    <div class="byline">Fanzhe Zhu · full research workbook on request · every claim below carries a numbered source</div>
+  </header>
+
+  <p class="thesis">Every AI tool in finance is racing to draft faster. But a draft cut from 3 hours to 5 minutes <b>doesn't shorten anyone's week if it still bounces 12 times</b> before a human signs it.</p>
+
+  <!-- ============ 01 THE INSIGHT ============ -->
+  <section>
+    <div class="sec-head"><h2>Four workflows, one bottleneck</h2><span class="tag">01 · THE INSIGHT</span></div>
+    <div class="diagram">
+    <svg viewBox="0 0 860 428" role="img" aria-label="Four financial workflows each pass through a human approval gate with rework loops; pre-check inserts before the gate">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#10202E"/></marker>
+        <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#B3372E"/></marker>
+      </defs>
+      <g font-family="'IBM Plex Mono',monospace" font-size="11">
+        <path d="M155 34 v-8 h210 v8" fill="none" stroke="#5D6B76" stroke-width="1.2"/>
+        <text x="260" y="16" text-anchor="middle" fill="#5D6B76" letter-spacing="1">AI TOOLS COMPETE HERE</text>
+        <path d="M470 34 v-8 h180 v8" fill="none" stroke="#B3372E" stroke-width="1.4"/>
+        <text x="560" y="16" text-anchor="middle" fill="#B3372E" font-weight="500" letter-spacing="1">THE WEEK DIES HERE</text>
+      </g>
+      <g font-family="'IBM Plex Sans',sans-serif" font-size="12.5">
+        <text x="8" y="88" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">INVESTMENT</text>
+        <text x="8" y="102" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">BANKING</text>
+        <rect x="155" y="66" width="210" height="46" rx="5" fill="#fff" stroke="#10202E" stroke-width="1.4"/>
+        <text x="260" y="85" text-anchor="middle" fill="#10202E" font-weight="600">Pitchbook + model</text>
+        <text x="260" y="102" text-anchor="middle" fill="#5D6B76" font-size="11.5">drafted overnight</text>
+        <path d="M365 89 H462" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <polygon points="470,89 492,66 628,66 650,89 628,112 492,112" fill="#F4E7CE" stroke="#B97C16" stroke-width="1.6"/>
+        <text x="560" y="85" text-anchor="middle" fill="#8A5D0F" font-weight="600">MD / VP turns</text>
+        <text x="560" y="102" text-anchor="middle" fill="#8A5D0F" font-size="11.5">×5–15 rounds ¹</text>
+        <path d="M655 89 H752" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <text x="760" y="93" fill="#10202E" font-size="12">Client pitch</text>
+        <path d="M500 62 C 460 34, 330 34, 290 60" fill="none" stroke="#B3372E" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ahr)"/>
+        <text x="395" y="52" text-anchor="middle" fill="#B3372E" font-family="'IBM Plex Mono',monospace" font-size="10.5">rework</text>
+
+        <text x="8" y="178" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">PRIVATE</text>
+        <text x="8" y="192" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">EQUITY</text>
+        <rect x="155" y="156" width="210" height="46" rx="5" fill="#fff" stroke="#10202E" stroke-width="1.4"/>
+        <text x="260" y="175" text-anchor="middle" fill="#10202E" font-weight="600">Diligence + IC memo</text>
+        <text x="260" y="192" text-anchor="middle" fill="#5D6B76" font-size="11.5">numbers hand-checked pre-IC ²</text>
+        <path d="M365 179 H462" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <polygon points="470,179 492,156 628,156 650,179 628,202 492,202" fill="#F4E7CE" stroke="#B97C16" stroke-width="1.6"/>
+        <text x="560" y="175" text-anchor="middle" fill="#8A5D0F" font-weight="600">Investment Committee</text>
+        <text x="560" y="192" text-anchor="middle" fill="#8A5D0F" font-size="11.5">sent back for more DD</text>
+        <path d="M655 179 H752" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <text x="760" y="183" fill="#10202E" font-size="12">Deal signed</text>
+        <path d="M500 152 C 460 124, 330 124, 290 150" fill="none" stroke="#B3372E" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ahr)"/>
+
+        <text x="8" y="268" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">EQUITY</text>
+        <text x="8" y="282" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">RESEARCH</text>
+        <rect x="155" y="246" width="210" height="46" rx="5" fill="#fff" stroke="#10202E" stroke-width="1.4"/>
+        <text x="260" y="265" text-anchor="middle" fill="#10202E" font-weight="600">Earnings note</text>
+        <text x="260" y="282" text-anchor="middle" fill="#5D6B76" font-size="11.5">written past midnight</text>
+        <path d="M365 269 H462" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <polygon points="470,269 492,246 628,246 650,269 628,292 492,292" fill="#F4E7CE" stroke="#B97C16" stroke-width="2.4"/>
+        <text x="560" y="265" text-anchor="middle" fill="#8A5D0F" font-weight="600">Supervisory Analyst</text>
+        <text x="560" y="282" text-anchor="middle" fill="#8A5D0F" font-size="11.5">~1h queue · wording bounces ³</text>
+        <path d="M655 269 H752" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <text x="760" y="273" fill="#10202E" font-size="12">Publish 7 am</text>
+        <path d="M500 242 C 460 214, 330 214, 290 240" fill="none" stroke="#B3372E" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ahr)"/>
+        <text x="838" y="252" text-anchor="end" fill="#0E7A63" font-family="'IBM Plex Mono',monospace" font-size="10.5" font-weight="500">◀ MVP</text>
+
+        <text x="8" y="358" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">WEALTH</text>
+        <text x="8" y="372" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#5D6B76" letter-spacing="1">MGMT</text>
+        <rect x="155" y="336" width="210" height="46" rx="5" fill="#fff" stroke="#10202E" stroke-width="1.4"/>
+        <text x="260" y="355" text-anchor="middle" fill="#10202E" font-weight="600">Client review deck</text>
+        <text x="260" y="372" text-anchor="middle" fill="#5D6B76" font-size="11.5">performance pages = high-risk</text>
+        <path d="M365 359 H462" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <polygon points="470,359 492,336 628,336 650,359 628,382 492,382" fill="#F4E7CE" stroke="#B97C16" stroke-width="1.6"/>
+        <text x="560" y="355" text-anchor="middle" fill="#8A5D0F" font-weight="600">Compliance principal</text>
+        <text x="560" y="372" text-anchor="middle" fill="#8A5D0F" font-size="11.5">2–5 days/round · edits re-reviewed ⁴</text>
+        <path d="M655 359 H752" stroke="#10202E" stroke-width="1.4" marker-end="url(#ah)"/>
+        <text x="760" y="363" fill="#10202E" font-size="12">Client meeting</text>
+        <path d="M500 332 C 460 304, 330 304, 290 330" fill="none" stroke="#B3372E" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#ahr)"/>
+      </g>
+      <g>
+        <line x1="420" y1="52" x2="420" y2="396" stroke="#0E7A63" stroke-width="2" stroke-dasharray="6 4"/>
+        <rect x="330" y="400" width="180" height="24" rx="12" fill="#DDEEE8" stroke="#0E7A63" stroke-width="1.4"/>
+        <text x="420" y="416" text-anchor="middle" fill="#0E7A63" font-family="'IBM Plex Mono',monospace" font-size="11" font-weight="600" letter-spacing="1">PRE-CHECK RUNS HERE</text>
+      </g>
+    </svg>
+    </div>
+    <p class="caption">Rework comes from two kinds of comments: <b>taste</b> (the MD's preferences — unlearnable, for now) and <b>content</b> (wrong numbers, missing disclosures, banned wording — written down, checkable). A pre-check clears the content half <b>before submission</b>, so each round carries only taste. AI never approves anything; it makes the human gate faster to pass.</p>
+  </section>
+
+  <!-- ============ 02 THE EVIDENCE ============ -->
+  <section>
+    <div class="sec-head"><h2>How I know this is real</h2><span class="tag">02 · THE EVIDENCE</span></div>
+    <p class="lede">I had no users to interview — so I treated the open internet as the user panel: mined practitioner forums for <b>firsthand accounts with specific numbers</b>, and accepted only what survived cross-checking. Because there was no access, the bar was higher, not lower. What came back, and what it proved:</p>
+    <div class="ev">
+      <div class="ev-row">
+        <div class="ev-src">Sell-side associate<br>WSO forum <sup class="r">3</sup></div>
+        <div class="ev-q">Earnings night: note approved by the MD at 10 pm, bounced by the Supervisory Analyst over a &ldquo;provocative&rdquo; title, rewritten — then an hour in the review queue.</div>
+        <div class="ev-c"><span class="cc">CONFIRMS →</span>The SA gate is a nightly, rule-based bottleneck — and the bounce reasons are checkable before submission. This is the MVP lane.</div>
+      </div>
+      <div class="ev-row">
+        <div class="ev-src">A bank&rsquo;s own SA job posting<br>Greenhouse <sup class="r">7</sup></div>
+        <div class="ev-q">Requires availability after 6 pm ET; lists duties — disclosure checks, factual support, numeric consistency, wording review.</div>
+        <div class="ev-c"><span class="cc">CONFIRMS →</span>The check rules are already written down. That duty list maps almost 1:1 onto the five checks in my MVP below.</div>
+      </div>
+      <div class="ev-row">
+        <div class="ev-src">PE associates<br>WSO + r/private_equity <sup class="r">2 5</sup></div>
+        <div class="ev-q">&ldquo;5,000+ files lol&rdquo; — one data room. Elsewhere: 20–25 hours a quarter on portfolio reporting at mid-level, 40–50 for juniors, with numbers hand-reconciled before every IC.</div>
+        <div class="ev-c"><span class="cc">CONFIRMS →</span>Pre-gate number-checking is a measurable, recurring cost — not an anecdote.</div>
+      </div>
+      <div class="ev-row" style="border-bottom:none">
+        <div class="ev-src">Financial advisor<br>r/CFP <sup class="r">6</sup></div>
+        <div class="ev-q">&ldquo;I just don&rsquo;t market&rdquo; — his answer to a review process of 2–5 business days per round, where every edit restarts the clock.</div>
+        <div class="ev-c"><span class="cc">CONFIRMS →</span>The gate doesn&rsquo;t just slow work down — it suppresses it. Clearing it faster creates activity, not just savings.</div>
+      </div>
+    </div>
+    <p class="meta-line">A pre-check product lives or dies on whether its flags can be trusted. So does research.</p>
+  </section>
+
+  <!-- ============ 03 THE WEDGE ============ -->
+  <section>
+    <div class="sec-head"><h2>Hasn&rsquo;t someone built this? Closer than my first map said.</h2><span class="tag">03 · THE WEDGE</span></div>
+    <p class="lede">Number-checking tools exist — UpSlide verifies a deck against your own model (real, high-frequency, <b>and taken</b>), and Daloopa and V7 Go carry provenance for numbers they place at extraction. The open ground only appears when you decompose what &ldquo;checking a number&rdquo; actually means — it&rsquo;s three different jobs:</p>
+    <div class="cols">
+      <div>
+        <div class="diagram">
+        <svg viewBox="0 0 420 312" role="img" aria-label="Three-rung verification ladder: transcription partially occupied, definition empty, treatment human">
+          <g font-family="'IBM Plex Sans',sans-serif">
+            <rect x="12" y="10" width="396" height="38" rx="5" fill="#EEF1F0" stroke="#C9D2D4" stroke-width="1.2"/>
+            <text x="24" y="26" font-size="11" font-weight="600" fill="#5D6B76">Consistency — doc vs. itself · doc vs. your own Excel</text>
+            <text x="24" y="41" font-family="'IBM Plex Mono',monospace" font-size="9.5" fill="#5D6B76">REAL &amp; HIGH-FREQUENCY — AND TAKEN: UPSLIDE ✓⁸</text>
+
+            <text x="12" y="72" font-family="'IBM Plex Mono',monospace" font-size="10" letter-spacing="1.5" fill="#10202E">THE OPEN JOB: IS THE DOCUMENT TRUE TO ITS SOURCES?</text>
+
+            <rect x="12" y="84" width="396" height="60" rx="5" fill="#fff" stroke="#0E7A63" stroke-width="1.4" stroke-dasharray="5 4"/>
+            <text x="24" y="103" font-size="12.5" font-weight="600" fill="#10202E">1 · Transcription — is 4,721 really 4,721?</text>
+            <text x="24" y="119" font-size="11" fill="#5D6B76">purely mechanical; the AI-easiest rung</text>
+            <text x="24" y="135" font-family="'IBM Plex Mono',monospace" font-size="9.5" fill="#0E7A63">DALOOPA · V7 GO¹³ AT EXTRACTION — AS REVIEW OF A DRAFTED DOC: OPEN</text>
+
+            <rect x="12" y="152" width="396" height="60" rx="5" fill="#DDEEE8" stroke="#0E7A63" stroke-width="2.2"/>
+            <text x="24" y="171" font-size="12.5" font-weight="600" fill="#0E7A63">2 · Definition — but the <tspan font-style="italic">right</tspan> 4,721?</text>
+            <text x="24" y="187" font-size="11" fill="#0E7A63">one filing shows revenue ×5: consolidated · segment · adjusted · period</text>
+            <text x="24" y="203" font-family="'IBM Plex Mono',monospace" font-size="9.5" font-weight="600" fill="#0E7A63">NO ONE — NEEDS ACCOUNTING CONTEXT, NOT REGEX</text>
+            <text x="396" y="171" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="9.5" font-weight="600" fill="#0E7A63">◀ THE WEDGE</text>
+
+            <rect x="12" y="220" width="396" height="60" rx="5" fill="#F4E7CE" stroke="#B97C16" stroke-width="1.6"/>
+            <text x="24" y="239" font-size="12.5" font-weight="600" fill="#8A5D0F">3 · Treatment — right number, used right?</text>
+            <text x="24" y="255" font-size="11" fill="#8A5D0F">the restructuring charge: recurring? add back to EBITDA?</text>
+            <text x="24" y="271" font-family="'IBM Plex Mono',monospace" font-size="9.5" fill="#8A5D0F">HUMAN JUDGMENT — PRE-CHECK SURFACES THE CALL; THE ASSOCIATE MAKES IT</text>
+
+            <text x="210" y="302" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="10" letter-spacing="1" fill="#0E7A63">AUTOMATE ① · FLAG ② WITH REASONING · ROUTE ③ TO SIGN-OFF</text>
+          </g>
+        </svg>
+        </div>
+        <p class="takeaway">Rung 1 is occupied only at extraction — tools can show where a number <i>they</i> placed came from; nothing re-verifies a document a human drafted at 1 a.m. Rung 2 is empty because matching a value to the right basis takes accounting context — <b>exactly what a language model brings and a rules engine can&rsquo;t</b>. Rung 3 stays human by design. The wedge isn&rsquo;t &ldquo;no one checks sources&rdquo; — it&rsquo;s the definition layer, plus post-hoc review of drafted documents.</p>
+      </div>
+      <div class="callout">
+        <div class="co-title">WHY RESEARCH FIRST — FINRA RN 26-14, JULY 2026 <sup class="r">9</sup></div>
+        <p>The Rule 2210 modernization proposal moves every other retail communication to <i>risk-based</i> review — and explicitly keeps <b>retail research reports as the only category with mandatory pre-publication review</b> (endnote 27; I read the primary text).</p>
+        <p>Marketing-side pre-check is already crowded — Saifr, Red Oak, IntelligenceBank <sup class="r">10</sup> — which also proves willingness to pay. Research publishing is whitespace: BlueMatrix has no pre-check product and zero open AI roles <sup class="r">11</sup>; the largest SA outsourcer publicly calls SA approval a publishing bottleneck <sup class="r">12</sup>. And the gap is structural, not just unstaffed: <b>the publishing system receives the note as a finished document, stripped of its lineage</b> — while the checks that matter (definition, note↔model) need the model, the transcript, and the citation chain that exist only where the note is drafted. A submission-time check is an automated bounce machine; a drafting-time check prevents the bounce. Their bounce history feeds the policy rules — which makes them a channel conversation, not a reason to stop.</p>
+        <p>Same notice: AI tools may serve inside review systems if <b>&ldquo;vetted, tested and monitored&rdquo;</b> — the regulator just published our buyer&rsquo;s diligence checklist.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 THE BET ============ -->
+  <section>
+    <div class="sec-head"><h2>MVP: one earnings season at the SA gate</h2><span class="tag">04 · THE BET</span></div>
+    <div class="mvp">
+      <div class="box"><b>Input</b><div class="chips"><span class="chip">note draft</span><span class="chip">model</span><span class="chip">transcript</span></div></div>
+      <div class="arrow">→</div>
+      <div class="box" style="flex:1;min-width:260px"><b>Five checks</b> <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">— mapped from a real SA job description <sup class="r">7</sup></span><div class="chips"><span class="chip">disclosures complete</span><span class="chip">rating language</span><span class="chip">banned wording</span><span class="chip hot">number → source: value &amp; basis</span><span class="chip hot">note ↔ model</span></div></div>
+      <div class="arrow">→</div>
+      <div class="box"><b>Readiness report</b><div style="font-size:12px;color:var(--muted);margin-top:6px">every flag pinned<br>to page &amp; cell</div></div>
+    </div>
+    <div class="kv">NORTH STAR&nbsp;&nbsp;<b>≥1 fewer SA round-trip</b> vs. baseline&nbsp;&nbsp;·&nbsp;&nbsp;GUARDRAIL&nbsp;&nbsp;missed catches trending down weekly&nbsp;&nbsp;·&nbsp;&nbsp;CO-BUILDER&nbsp;&nbsp;compliance, not bypassed</div>
+    <div class="kv">DIFF MODE&nbsp;&nbsp;after each edit round, re-check only the blast radius — <b>stale hardcodes + prose now contradicting updated numbers</b> — because one changed assumption ripples through the football field, the summary page, and every sentence quoting the old figure</div>
+    <div class="kill">
+      <div class="co-title">PRE-COMMITTED KILL CRITERIA</div>
+      <ul>
+        <li>No measurable round-trip drop → bounces are taste, not content → stop, publish the null result.</li>
+        <li>Adoption &lt;30% because verifying flags costs more than it saves → stop.</li>
+        <li>Compliance treats pre-check as turf invasion → pivot to the IB source-verification lane.</li>
+      </ul>
+    </div>
+    <p class="takeaway"><b>Deliberately a feature-sized bet on a capability-sized asset.</b> What's really being proven at the SA gate is the verification stack — citation-chain checking, the policy rule library, verdict/reasoning separation — which travels to deck QC, IC memos, and performance-number verification. The SA gate is simply its cheapest proof point; which is why it earns shadow-mode funding, not pilot funding, until the bounce data says otherwise.</p>
+  </section>
+
+  <!-- ============ 05 SOURCES ============ -->
+  <section>
+    <div class="sec-head"><h2>Sources</h2><span class="tag">05 · THE PAPER TRAIL</span></div>
+    <div class="src">
+      <div><b>[1]</b> IB turns &amp; zero-tolerance rework — firsthand threads incl. a print run trashed over a title-page error. <a href="https://www.wallstreetoasis.com/forums/pitch-book-stories">wallstreetoasis.com/forums/pitch-book-stories</a></div>
+      <div><b>[2]</b> Pre-IC manual reconciliation; portco reporting 20–25 h/quarter (mid-level), 40–50 h (juniors). <a href="https://www.reddit.com/r/private_equity/comments/1q2zb7f/">reddit.com/r/private_equity/comments/1q2zb7f</a></div>
+      <div><b>[3]</b> SA queue on earnings night: 10 pm submission, wording rejection, ~1 h wait. <a href="https://www.wallstreetoasis.com/forum/equity-research/a-day-in-life-of-my-sell-side-days">wallstreetoasis.com · a-day-in-life-of-my-sell-side-days</a></div>
+      <div><b>[4]</b> Compliance review 2–5 business days/round; every edit re-reviewed. Industry workflow guides. <a href="https://bedrockfs.com/marketing-approval-workflow-best-practices-for-independent-financial-professionals/">bedrockfs.com · marketing-approval-workflow</a></div>
+      <div><b>[5]</b> Data room overload ("5,000+ files"). <a href="https://www.wallstreetoasis.com/forum/private-equity/what-do-you-hate-the-most-about-second-round-diligence">wallstreetoasis.com · second-round-diligence</a></div>
+      <div><b>[6]</b> Compliance friction suppressing marketing; multi-step approvals; rejection patterns. <a href="https://www.reddit.com/r/CFP/comments/1po6xuq/">reddit.com/r/CFP/comments/1po6xuq</a></div>
+      <div><b>[7]</b> BTIG Supervisory Analyst job description — after-6pm ET requirement; review duty list. <a href="https://job-boards.greenhouse.io/btig27/jobs/6917374002">greenhouse.io/btig27 · SA posting</a></div>
+      <div><b>[8]</b> UpSlide AI Consistency Check — whole-deck internal consistency; used by KPMG, Rothschild. <a href="https://upslide.net">upslide.net</a> (official)</div>
+      <div><b>[9]</b> FINRA Regulatory Notice 26-14, endnote 27 — research reports keep mandatory pre-publication review; AI "vetted, tested and monitored". <a href="https://www.finra.org/rules-guidance/notices/26-14">finra.org/rules-guidance/notices/26-14</a> (primary)</div>
+      <div><b>[10]</b> Marketing-compliance incumbents: Saifr, Red Oak AI Review (2025), IntelligenceBank office plugins. Official product pages.</div>
+      <div><b>[11]</b> BlueMatrix official job board — 8 open roles, zero AI/ML. <a href="https://jobs.lever.co/BlueMatrix">jobs.lever.co/BlueMatrix</a> (accessed Jul 2026)</div>
+      <div><b>[12]</b> Acuity (SA outsourcer, 50+ Series-16 team) — SA approval as publishing bottleneck; official services page.</div>
+      <div><b>[13]</b> Provenance at extraction: Daloopa — cell-level click-through from Excel to the filing; V7 Go — source-grounded extraction citations. Official product pages. Both verify numbers <i>they</i> placed, not documents humans drafted.</div>
+    </div>
+    <p class="src-note"><b>Evidence discipline:</b> claims graded official / guidance / third-party / inference; community citations corroborated by independent re-retrieval before use; rejected-evidence table in the workbook records what didn&rsquo;t survive. Links accessed July 2026.</p>
+  </section>
+
+  <footer>
+    <div class="f">WORKBOOK · 4-persona handbook (workflows, pain × capability) · 2-round evidence file, confidence-graded · 2-round competitive scan · opportunity assessment v4 + rolling watchlist</div>
+    <div class="f">FANZHE ZHU · zhufanzhe97@gmail.com</div>
+  </footer>
+
+</div>
+</body>
+</html>
