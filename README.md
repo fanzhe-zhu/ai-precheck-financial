@@ -10,9 +10,9 @@ A product opportunity for AI assistant platforms in financial services, taken en
 
 | | | |
 |---|---|---|
-| **[The memo](https://fanzhe-zhu.github.io/approval-bottleneck/memo.html)** | the argument, 13 numbered sources | ~4 min |
-| **[The prototype](https://fanzhe-zhu.github.io/approval-bottleneck/prototype.html)** | pre-check inside Word + an assistant side panel — click flags ①–⑦ (skinned as one platform for concreteness) | ~2 min |
-| **[The eval](https://fanzhe-zhu.github.io/approval-bottleneck/eval.html)** | blind-injected errors, holdout corpus, v1→v2 | ~3 min |
+| **[The memo](https://fanzhe-zhu.github.io/ai-precheck-financial/memo.html)** | the argument, 13 numbered sources | ~4 min |
+| **[The prototype](https://fanzhe-zhu.github.io/ai-precheck-financial/prototype.html)** | pre-check inside Word + an assistant side panel — click flags ①–⑦ (skinned as one platform for concreteness) | ~2 min |
+| **[The eval](https://fanzhe-zhu.github.io/ai-precheck-financial/eval.html)** | blind-injected errors, holdout corpus, v1→v2 | ~3 min |
 
 ## Repo layout
 
